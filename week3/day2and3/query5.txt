@@ -1,0 +1,237 @@
+mysql> select *from trains;
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        1 | delhi      |
+|        2 | chennai    |
+|        3 | kolkatta   |
+|        4 | bombay     |
+|        5 | pune       |
++----------+------------+
+5 rows in set (0.00 sec)
+
+
+
+mysql> select * from routes;
++----------+-------------------+------------------------+----------------+
+| route_id | origin_station_id | destination_station_id | distance_in_km |
++----------+-------------------+------------------------+----------------+
+|        1 |                 1 |                      2 |             20 |
+|        2 |                 2 |                      3 |             40 |
+|        3 |                 3 |                      4 |             30 |
+|        4 |                 4 |                      5 |             25 |
+|        5 |                 5 |                      6 |             46 |
++----------+-------------------+------------------------+----------------+
+5 rows in set (0.00 sec)
+
+
+mysql> select train_name,sum(noofseats) as number_of_seats from trains inner join traincoaches on trains.train_no=traincoaches.train_no group by train_name;
++------------+-----------------+
+| train_name | number_of_seats |
++------------+-----------------+
+| bombay     |              60 |
+| chennai    |              60 |
+| delhi      |              60 |
+| kolkatta   |              58 |
+| pune       |              50 |
++------------+-----------------+
+5 rows in set (0.00 sec)
+
+
+mysql> select * from routes inner join stations on station_id=destination_station_id where station_code ='bangalore';
++----------+-------------------+------------------------+----------------+------------+--------------+
+| route_id | origin_station_id | destination_station_id | distance_in_km | station_id | station_code |
++----------+-------------------+------------------------+----------------+------------+--------------+
+|        6 |                 6 |                      1 |             50 |          1 | bangalore    |
++----------+-------------------+------------------------+----------------+------------+--------------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from routes inner join stations on station_id=origin_station_id where station_code ='bangalore' or station_code='chennai' or station_code = 'calcutta';
++----------+-------------------+------------------------+----------------+------------+--------------+
+| route_id | origin_station_id | destination_station_id | distance_in_km | station_id | station_code |
++----------+-------------------+------------------------+----------------+------------+--------------+
+|        1 |                 1 |                      2 |             20 |          1 | bangalore    |
+|        3 |                 3 |                      4 |             30 |          3 | calcutta     |
+|        4 |                 4 |                      5 |             25 |          4 | chennai      |
++----------+-------------------+------------------------+----------------+------------+--------------+
+3 rows in set (0.01 sec)
+
+
+mysql> select * from booking where date_of_booking>='2005-01-01' or date_of_booking<='2005-12-31';                                                                                
++----------------+----------+----------+-----------+-----------------+-----------------+---------------+
+| booking_ref_no | route_id | train_no | coachcode | date_of_journey | date_of_booking | no_of_tickets |
++----------------+----------+----------+-----------+-----------------+-----------------+---------------+
+|              1 |        1 |        1 |       101 | 2015-03-11      | 2015-03-08      |             4 |
+|              2 |        2 |        2 |       102 | 2015-03-08      | 2015-03-06      |             4 |
+|              3 |        3 |        3 |       103 | 2015-03-06      | 2015-03-04      |             4 |
+|              4 |        4 |        4 |       104 | 2015-03-04      | 2015-03-02      |             4 |
+|              5 |        4 |        1 |       101 | 2005-01-03      | 2005-01-01      |             2 |
+|              6 |        4 |        1 |       101 | 2005-02-03      | 2005-02-01      |             2 |
+|              7 |        4 |        1 |       101 | 2005-03-03      | 2005-03-01      |             2 |
+|              8 |        4 |        1 |       101 | 2005-04-03      | 2005-04-01      |             2 |
+|              9 |        4 |        1 |       101 | 2005-08-03      | 2005-08-01      |             2 |
+|             10 |        4 |        1 |       101 | 2005-12-03      | 2005-12-01      |             2 |
++----------------+----------+----------+-----------+-----------------+-----------------+---------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from trains where train_name like 'b%';
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        4 | bombay     |
++----------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from booking where date_of_booking is not null;
++----------------+----------+----------+-----------+-----------------+-----------------+---------------+
+| booking_ref_no | route_id | train_no | coachcode | date_of_journey | date_of_booking | no_of_tickets |
++----------------+----------+----------+-----------+-----------------+-----------------+---------------+
+|              1 |        1 |        1 |       101 | 2015-03-11      | 2015-03-08      |             4 |
+|              2 |        2 |        2 |       102 | 2015-03-08      | 2015-03-06      |             4 |
+|              3 |        3 |        3 |       103 | 2015-03-06      | 2015-03-04      |             4 |
+|              4 |        4 |        4 |       104 | 2015-03-04      | 2015-03-02      |             4 |
+|              5 |        4 |        4 |       101 | 2005-01-03      | 2005-01-01      |             2 |
+|              6 |        4 |        4 |       101 | 2005-02-03      | 2005-02-01      |             2 |
+|              7 |        4 |        4 |       101 | 2005-03-03      | 2005-03-01      |             2 |
+|              8 |        4 |        4 |       101 | 2005-04-03      | 2005-04-01      |             2 |
+|              9 |        4 |        4 |       101 | 2005-08-03      | 2005-08-01      |             2 |
+|             10 |        4 |        4 |       101 | 2005-12-03      | 2005-12-01      |             2 |
++----------------+----------+----------+-----------+-----------------+-----------------+---------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from booking where date_of_booking>='2006-01-01' and date_of_booking<='2006-12-31' and date_of_journey >='2007-01-01' and date_of_journey <='2007-12-31';
++----------------+----------+----------+------------+-----------------+-----------------+---------------+
+| booking_ref_no | train_no | route_id | coach_code | date_of_journey | date_of_booking | no_of_tickets |
++----------------+----------+----------+------------+-----------------+-----------------+---------------+
+|             11 |        3 |        3 |        101 | 2007-12-03      | 2006-12-01      |             2 |
+|             12 |        6 |        5 |        102 | 2007-08-20      | 2006-06-13      |             4 |
++----------------+----------+----------+------------+-----------------+-----------------+---------------+
+2 rows in set (0.00 sec)
+
+
+
+mysql> select train_name,count(coach_code) from traincoaches inner join trains on trains.train_no=traincoaches.train_no group by train_name;
++------------+-------------------+
+| train_name | count(coach_code) |
++------------+-------------------+
+| bombay     |                 6 |
+| chennai    |                 6 |
+| delhi      |                 6 |
+| kolkatta   |                 6 |
+| pune       |                 5 |
++------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> select train_name,count(booking_ref_no) from trains t inner join booking b on t.train_no=b.train_no where t.train_no=1 group by t.train_name;
++------------+-----------------------+
+| train_name | count(booking_ref_no) |
++------------+-----------------------+
+| delhi      |                     1 |
++------------+-----------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select train_name,sum(noofseats) from traincoaches inner join trains t on t.train_no=traincoaches.train_no where t.train_no=1 group by train_name;
++------------+----------------+
+| train_name | sum(noofseats) |
++------------+----------------+
+| delhi      |             60 |
++------------+----------------+
+1 row in set (0.00 sec)
+
+
+mysql> select min(distance_in_km) from routes;
++---------------------+
+| min(distance_in_km) |
++---------------------+
+|                  20 |
++---------------------+
+1 row in set (0.01 sec)
+
+
+mysql> select train_name,sum(no_of_tickets) from trains t inner join booking b on t.train_no=b.train_no group by t.train_no;
++------------+--------------------+
+| train_name | sum(no_of_tickets) |
++------------+--------------------+
+| delhi      |                  4 |
+| chennai    |                  4 |
+| kolkatta   |                  6 |
+| bombay     |                 16 |
++------------+--------------------+
+4 rows in set (0.00 sec)
+
+
+mysql> select coach_code,(costperkm*50) as cost_for_50km from coaches;
++------------+---------------+
+| coach_code | cost_for_50km |
++------------+---------------+
+|        101 |          1000 |
+|        102 |          1500 |
+|        103 |          1750 |
+|        104 |          2000 |
+|        105 |          2500 |
+|        106 |          3000 |
++------------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> select train_name,tr.departtime from trains t inner join trainroutemaps tr on t.train_no=tr.train_no inner join routes r on tr.route_id=r.route_id inner join stations s on s.station_id=r.origin_station_id where s.station_code='bangalore';
++------------+------------+
+| train_name | departtime |
++------------+------------+
+| delhi      | 11:40:00   |
++------------+------------+
+1 row in set (0.00 sec)
+
+
+mysql> select train_name,sum(no_of_tickets) from booking b inner join trains t on b.train_no=t.train_no  group by b.train_no having sum(no_of_tickets)>500;
++------------+--------------------+
+| train_name | sum(no_of_tickets) |
++------------+--------------------+
+| delhi      |                504 |
++------------+--------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select train_name,sum(no_of_tickets) from booking b inner join trains t on b.train_no=t.train_no  group by b.train_no having sum(no_of_tickets)<50;
++------------+--------------------+
+| train_name | sum(no_of_tickets) |
++------------+--------------------+
+| chennai    |                  4 |
+| kolkatta   |                  6 |
+| bombay     |                 16 |
++------------+--------------------+
+3 rows in set (0.00 sec)
+
+mysql> select train_name,origin_station_id,destination_station_id,coach_code from trains t inner join booking b on b.train_no=t.train_no inner join routes r on r.route_id=b.route_id where date_of_journey>'2015-02-25';
++------------+-------------------+------------------------+------------+
+| train_name | origin_station_id | destination_station_id | coach_code |
++------------+-------------------+------------------------+------------+
+| delhi      |                 1 |                      2 |        101 |
+| chennai    |                 2 |                      3 |        102 |
+| kolkatta   |                 3 |                      4 |        103 |
+| bombay     |                 4 |                      5 |        104 |
++------------+-------------------+------------------------+------------+
+4 rows in set (0.00 sec)
+
+
+mysql> select route_id from routes r inner join stations s on r.origin_station_id = s.station_id where s.station_code='mysore' and route_id in (select route_id from routes r inner join stations s on r.destination_station_id=s.station_id where s.station_code='chennai');
++----------+
+| route_id |
++----------+
+|        7 |
++----------+
+1 rows in set (0.00 sec)
+
+
+mysql> select train_name from trains t left join bookings b on t.train_no=b.train_no where route_id is null;
++------------+
+| train_name |
++------------+
+| pune       |
++------------+
+1 row in set (0.00 sec)
+
+
+
+

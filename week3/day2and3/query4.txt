@@ -1,0 +1,498 @@
+mysql> create database railway;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> use railway;
+Database changed
+mysql> create table trains(train_no int primary key,train_name varchar(40));
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> create table coaches(coach_code int primary key,costperkm bigint);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table stations(station_id int primary key,station_code int);
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> desc stations;
++--------------+---------+------+-----+---------+-------+
+| Field        | Type    | Null | Key | Default | Extra |
++--------------+---------+------+-----+---------+-------+
+| station_id   | int(11) | NO   | PRI | NULL    |       |
+| station_code | int(11) | YES  |     | NULL    |       |
++--------------+---------+------+-----+---------+-------+
+2 rows in set (0.04 sec)
+
+mysql> create table routes(route_id int primary key,origin_station_id int,destination_station_id int,distance_in_km int,foreign key(origin_station_id) references stations(station_id));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> desc routes;
++------------------------+---------+------+-----+---------+-------+
+| Field                  | Type    | Null | Key | Default | Extra |
++------------------------+---------+------+-----+---------+-------+
+| route_id               | int(11) | NO   | PRI | NULL    |       |
+| origin_station_id      | int(11) | YES  | MUL | NULL    |       |
+| destination_station_id | int(11) | YES  |     | NULL    |       |
+| distance_in_km         | int(11) | YES  |     | NULL    |       |
++------------------------+---------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table routes add foreign key(destination_station_id) references stations(station_id);
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc routes;
++------------------------+---------+------+-----+---------+-------+
+| Field                  | Type    | Null | Key | Default | Extra |
++------------------------+---------+------+-----+---------+-------+
+| route_id               | int(11) | NO   | PRI | NULL    |       |
+| origin_station_id      | int(11) | YES  | MUL | NULL    |       |
+| destination_station_id | int(11) | YES  | MUL | NULL    |       |
+| distance_in_km         | int(11) | YES  |     | NULL    |       |
++------------------------+---------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table users(user_id int primary key,login_id bigint,password varchar(40));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> create table traincoaches(train_no int,coach_code int,noofseats int,foreign key(train_no) references trains(train_no),foreign key(coach_code) references coaches(coach_code));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc traincoaches;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| train_no   | int(11) | YES  | MUL | NULL    |       |
+| coach_code | int(11) | YES  | MUL | NULL    |       |
+| noofseats  | int(11) | YES  |     | NULL    |       |
++------------+---------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> create table trainroutemaps(route_id int primary key,train_no int unique,arrivaltime time,departtime time,duration int);
+Query OK, 0 rows affected (0.14 sec)
+
+ysql> create table booking(booking_ref_no int primary key,train_no int,route_id int,coach_code int,date_of_journey date,date_of_booking date,no_of_tickets int);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> alter table booking add  foreign key(train_no,route_id) references trainroutemaps(train_no,route_id);
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+
+mysql> desc booking;
++-----------------+---------+------+-----+---------+-------+
+| Field           | Type    | Null | Key | Default | Extra |
++-----------------+---------+------+-----+---------+-------+
+| booking_ref_no  | int(11) | NO   | PRI | NULL    |       |
+| route_id        | int(11) | YES  | MUL | NULL    |       |
+| train_no        | int(11) | YES  | MUL | NULL    |       |
+| coachcode       | int(11) | YES  |     | NULL    |       |
+| date_of_journey | date    | YES  |     | NULL    |       |
+| date_of_booking | date    | YES  |     | NULL    |       |
+| no_of_tickets   | int(11) | YES  |     | NULL    |       |
++-----------------+---------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> alter table booking add foreign key(coachcode) references coaches(coach_code);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc booking;
++-----------------+---------+------+-----+---------+-------+
+| Field           | Type    | Null | Key | Default | Extra |
++-----------------+---------+------+-----+---------+-------+
+| booking_ref_no  | int(11) | NO   | PRI | NULL    |       |
+| route_id        | int(11) | YES  | MUL | NULL    |       |
+| train_no        | int(11) | YES  | MUL | NULL    |       |
+| coachcode       | int(11) | YES  | MUL | NULL    |       |
+| date_of_journey | date    | YES  |     | NULL    |       |
+| date_of_booking | date    | YES  |     | NULL    |       |
+| no_of_tickets   | int(11) | YES  |     | NULL    |       |
++-----------------+---------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc stations;
++--------------+---------+------+-----+---------+-------+
+| Field        | Type    | Null | Key | Default | Extra |
++--------------+---------+------+-----+---------+-------+
+| station_id   | int(11) | NO   | PRI | NULL    |       |
+| station_code | int(11) | YES  |     | NULL    |       |
++--------------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> insert into stations values(1,101),(2,102),(3,103),(4,104),(5,105),(6,106);
+Query OK, 6 rows affected (0.05 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from stations;
++------------+--------------+
+| station_id | station_code |
++------------+--------------+
+|          1 |          101 |
+|          2 |          102 |
+|          3 |          103 |
+|          4 |          104 |
+|          5 |          105 |
+|          6 |          106 |
++------------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> insert into routes values(01,1,2,20),(02,2,3,40),(03,3,4,30),(04,4,5,25),(05,5,6,46);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> desc trains;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| train_no   | int(11)     | NO   | PRI | NULL    |       |
+| train_name | varchar(40) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.03 sec)
+
+mysql> insert into trains values(0001,'delhi'),(0002,'chennai'),(0004,'bombay'),(0005,'pune');
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into coaches values(101,20),(102,30),(103,35),(104,40),(105,50),(106,60);
+Query OK, 6 rows affected (0.08 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from trains;
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        1 | delhi      |
+|        2 | chennai    |
+|        4 | bombay     |
+|        5 | pune       |
++----------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from coaches;
++------------+-----------+
+| coach_code | costperkm |
++------------+-----------+
+|        101 |        20 |
+|        102 |        30 |
+|        103 |        35 |
+|        104 |        40 |
+|        105 |        50 |
+|        106 |        60 |
++------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from traincoaches;
+Empty set (0.00 sec)
+
+mysql> desc traincoaches;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| train_no   | int(11) | YES  | MUL | NULL    |       |
+| coach_code | int(11) | YES  | MUL | NULL    |       |
+| noofseats  | int(11) | YES  |     | NULL    |       |
++------------+---------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc traincoaches;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| train_no   | int(11) | YES  | MUL | NULL    |       |
+| coach_code | int(11) | YES  | MUL | NULL    |       |
+| noofseats  | int(11) | YES  |     | NULL    |       |
++------------+---------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc trains;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| train_no   | int(11)     | NO   | PRI | NULL    |       |
+| train_name | varchar(40) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from trains;
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        1 | delhi      |
+|        2 | chennai    |
+|        4 | bombay     |
+|        5 | pune       |
++----------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from coaches;
++------------+-----------+
+| coach_code | costperkm |
++------------+-----------+
+|        101 |        20 |
+|        102 |        30 |
+|        103 |        35 |
+|        104 |        40 |
+|        105 |        50 |
+|        106 |        60 |
++------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> insert into traincoaches values(1,101,10);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into traincoaches values(2,102,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into trains values(3,'kolkatta');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(4,104,10),(3,103,8);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from users;
+Empty set (0.03 sec)
+
+mysql> insert into users values(1,101,'pwd');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into users values(2,102,'pwd');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into users values(3,103,'pwd');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into users values(4,104,'pwd');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into users values(5,105,'pwd');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into users values(6,106,'pwd');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from trainroutemaps;
+Empty set (0.02 sec)
+
+mysql> select * from routes;
++----------+-------------------+------------------------+----------------+
+| route_id | origin_station_id | destination_station_id | distance_in_km |
++----------+-------------------+------------------------+----------------+
+|        1 |                 1 |                      2 |             20 |
+|        2 |                 2 |                      3 |             40 |
+|        3 |                 3 |                      4 |             30 |
+|        4 |                 4 |                      5 |             25 |
+|        5 |                 5 |                      6 |             46 |
++----------+-------------------+------------------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trains;
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        1 | delhi      |
+|        2 | chennai    |
+|        3 | kolkatta   |
+|        4 | bombay     |
+|        5 | pune       |
++----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into trainroutemaps values(1,1,'11:20:50','11:40:00',20);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from trainroutemaps;
++----------+----------+-------------+------------+----------+
+| route_id | train_no | arrivaltime | departtime | duration |
++----------+----------+-------------+------------+----------+
+|        1 |        1 | 11:20:50    | 11:40:00   |       20 |
++----------+----------+-------------+------------+----------+
+1 row in set (0.00 sec)
+
+mysql> insert into trainroutemaps values(2,2,'12:20:50','12:40:00',20);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into trainroutemaps values(3,3,'13:20:50','13:40:00',20);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into trainroutemaps values(4,4,'14:20:50','14:40:00',20);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from coaches;
++------------+-----------+
+| coach_code | costperkm |
++------------+-----------+
+|        101 |        20 |
+|        102 |        30 |
+|        103 |        35 |
+|        104 |        40 |
+|        105 |        50 |
+|        106 |        60 |
++------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from trainroutemaps;
++----------+----------+-------------+------------+----------+
+| route_id | train_no | arrivaltime | departtime | duration |
++----------+----------+-------------+------------+----------+
+|        1 |        1 | 11:20:50    | 11:40:00   |       20 |
+|        2 |        2 | 12:20:50    | 12:40:00   |       20 |
+|        3 |        3 | 13:20:50    | 13:40:00   |       20 |
+|        4 |        4 | 14:20:50    | 14:40:00   |       20 |
++----------+----------+-------------+------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from trains;
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        1 | delhi      |
+|        2 | chennai    |
+|        3 | kolkatta   |
+|        4 | bombay     |
+|        5 | pune       |
++----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trains;
++----------+------------+
+| train_no | train_name |
++----------+------------+
+|        1 | delhi      |
+|        2 | chennai    |
+|        3 | kolkatta   |
+|        4 | bombay     |
+|        5 | pune       |
++----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into booking values(1,1,1,101,'2015-03-11','2015-03-08',4);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into booking values(2,2,2,102,'2015-03-08','2015-03-06',4);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into booking values(3,3,3,103,'2015-03-06','2015-03-04',4);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into booking values(4,4,4,104,'2015-03-04','2015-03-02',4);
+Query OK, 1 row affected (0.13 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_railway |
++-------------------+
+| booking           |
+| coaches           |
+| routes            |
+| stations          |
+| traincoaches      |
+| trainroutemaps    |
+| trains            |
+| users             |
++-------------------+
+8 rows in set (0.03 sec)
+
+
+mysql> select * from coaches;
++------------+-----------+
+| coach_code | costperkm |
++------------+-----------+
+|        101 |        20 |
+|        102 |        30 |
+|        103 |        35 |
+|        104 |        40 |
+|        105 |        50 |
+|        106 |        60 |
++------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from traincoaches;
++----------+------------+-----------+
+| train_no | coach_code | noofseats |
++----------+------------+-----------+
+|        1 |        101 |        10 |
+|        2 |        102 |        10 |
+|        4 |        104 |        10 |
+|        3 |        103 |         8 |
++----------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> insert into traincoaches values(1,102,10);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into traincoaches values(1,103,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(1,104,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(1,105,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(1,106,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into traincoaches values(2,101,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(2,103,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(2,104,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(2,105,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(2,106,10);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into traincoaches values(3,101,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into traincoaches values(3,102,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(3,104,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into traincoaches values(3,105,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(3,106,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(4,101,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(4,102,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(4,103,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into traincoaches values(4,105,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(4,106,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(5,101,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(5,102,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(5,103,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into traincoaches values(5,104,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into traincoaches values(5,106,10);
+Query OK, 1 row affected (0.00 sec)
+
+
+mysql> 

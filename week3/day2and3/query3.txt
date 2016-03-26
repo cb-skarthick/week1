@@ -1,0 +1,157 @@
+mysql> select name from marks inner join students on marks.student_id=students.id where annual is null and half_yearly is null and quarterly is null;
++------+
+| name |
++------+
+| Thor |
++------+
+
+
+mysql> select name,ifnull(sum(annual),0) as marks,year from marks inner join students on marks.student_id = students.id  group by name,year;
++-----------+-------+------+
+| name      | marks | year |
++-----------+-------+------+
+| Daredevil |   465 | 2003 |
+| Daredevil |   319 | 2004 |
+| Daredevil |   385 | 2005 |
+| Daredevil |   318 | 2006 |
+| Daredevil |   306 | 2007 |
+| Hulk      |   296 | 2003 |
+| Hulk      |   463 | 2004 |
+| Hulk      |   295 | 2005 |
+| Hulk      |   218 | 2006 |
+| Hulk      |   429 | 2007 |
+| Ironman   |   323 | 2003 |
+| Ironman   |   287 | 2004 |
+| Ironman   |   287 | 2005 |
+| Ironman   |   320 | 2006 |
+| Ironman   |   412 | 2007 |
+| Thor      |   424 | 2003 |
+| Thor      |   309 | 2004 |
+| Thor      |   375 | 2005 |
+| Thor      |   296 | 2006 |
+| Thor      |   212 | 2007 |
+| X Man     |   261 | 2003 |
+| X Man     |   307 | 2004 |
+| X Man     |   312 | 2005 |
+| X Man     |   287 | 2006 |
+| X Man     |   354 | 2007 |
++-----------+-------+------+
+25 rows in set (0.03 sec)
+
+mysql> select name,sum(quarterly) as total,year,grade from marks inner join students on marks.student_id = students.id  group by name,year,grade having year= 2003;
++-----------+-------+------+-------+
+| name      | total | year | grade |
++-----------+-------+------+-------+
+| Daredevil |   428 | 2003 |     6 |
+| Hulk      |   203 | 2003 |     6 |
+| Ironman   |   277 | 2003 |     6 |
+| Thor      |  NULL | 2003 |     6 |
+| X Man     |   300 | 2003 |     6 |
++-----------+-------+------+-------+
+5 rows in set (0.00 sec)
+
+
+mysql> select name,count(medals.medal_won)from students inner join medals on students.id = medals.student_id group by name,grade;
++-----------+-------------------------+
+| name      | count(medals.medal_won) |
++-----------+-------------------------+
+| Daredevil |                       2 |
+| Daredevil |                       2 |
+| Daredevil |                       1 |
+| Hulk      |                       1 |
+| Hulk      |                       3 |
+| Thor      |                       1 |
+| Thor      |                       3 |
++-----------+-------------------------+
+7 rows in set (0.00 sec)
+
+mysql> select name,count(medals.medal_won)from students inner join medals on students.id = medals.student_id group by name,grade having grade>9 and count(medal_won)>3;
+Empty set (0.00 sec)
+
+mysql> select name,count(medals.medal_won)from students left join medals on students.id = medals.student_id  group by name,grade having count(medal_won)<2;
++-------------+-------------------------+
+| name        | count(medals.medal_won) |
++-------------+-------------------------+
+| Daredevil   |                       1 |
+| Hulk        |                       1 |
+| Ironman     |                       0 |
+| Quicksilver |                       0 |
+| Thor        |                       1 |
+| X Man       |                       0 |
++-------------+-------------------------+
+6 rows in set (0.00 sec)
+
+
+mysql> select s.name,m.year from marks m inner join students s on s.id = m.student_id   left join medals on m.student_id=medals.student_id where annual>90 and medal_won is null group by name,year;
++---------+------+
+| name    | year |
++---------+------+
+| Ironman | 2003 |
+| Ironman | 2006 |
+| Ironman | 2007 |
+| X Man   | 2004 |
+| X Man   | 2005 |
++---------+------+
+5 rows in set (0.00 sec)
+
+
+mysql> select s.name,game_id,medal_won,year,grade from students s inner join medals m on s.id = m.student_id where name in (select name from students s inner join medals m on s.id=m.student_id group by name having count(medal_won)) ;
++-----------+---------+-----------+------+-------+
+| name      | game_id | medal_won | year | grade |
++-----------+---------+-----------+------+-------+
+| Daredevil |       5 | gold      | 2003 |     6 |
+| Thor      |       5 | silver    | 2003 |     6 |
+| Hulk      |       4 | silver    | 2003 |     6 |
+| Daredevil |       1 | gold      | 2003 |     6 |
+| Daredevil |       3 | bronze    | 2004 |     7 |
+| Daredevil |       4 | silver    | 2004 |     7 |
+| Hulk      |       2 | silver    | 2004 |     7 |
+| Hulk      |       4 | bronze    | 2004 |     7 |
+| Hulk      |       5 | gold      | 2004 |     7 |
+| Daredevil |       3 | bronze    | 2005 |     8 |
+| Thor      |       2 | gold      | 2005 |     8 |
+| Thor      |       3 | bronze    | 2005 |     8 |
+| Thor      |       4 | bronze    | 2005 |     8 |
++-----------+---------+-----------+------+-------+
+13 rows in set (0.04 sec)
+
+
+
+
+
+
+select name,if(sum(quarterly)>450 and sum(quarterly)<=500,'s',if(sum(quarterly)<=450 and sum(quarterly)>400,'a',if(sum(quarterly)>350 and sum(quarterly)<=400,'b',if(sum(quarterly)>300 and sum(quarterly)<=350,'c',if(sum(quarterly)>=250 and sum(quarterly)<=300,'d','f'))))) as quarterly_rating,if(sum(half_yearly)>450 and sum(half_yearly)<=500,'s',if(sum(half_yearly)<=450 and sum(half_yearly)>400,'a',if(sum(half_yearly)>350 and sum(half_yearly)<=400,'b',if(sum(half_yearly)>300 and sum(half_yearly)<=350,'c',if(sum(half_yearly)>=250 and sum(half_yearly)<=300,'d','f'))))) as half_yearly_rating, if(sum(annual)>450 and sum(annual)<=500,'s',if(sum(annual)<=450 and sum(annual)>400,'a',if(sum(annual)>350 and sum(annual)<=400,'b',if(sum(annual)>300 and sum(annual)<=350,'c',if(sum(annual)>=250 and sum(annual)<=300,'d','f'))))) as annual_rating from students inner join marks on students.id=marks.student_id group by name,year;
+
+-----------+------------------+--------------------+---------------+
+| name      | quarterly_rating | half_yearly_rating | annual_rating |
++-----------+------------------+--------------------+---------------+
+| Daredevil | a                | b                  | s             |
+| Daredevil | c                | c                  | c             |
+| Daredevil | c                | f                  | b             |
+| Daredevil | a                | a                  | c             |
+| Daredevil | b                | b                  | c             |
+| Hulk      | f                | d                  | d             |
+| Hulk      | c                | d                  | s             |
+| Hulk      | c                | d                  | d             |
+| Hulk      | b                | f                  | f             |
+| Hulk      | c                | d                  | a             |
+| Ironman   | d                | d                  | c             |
+| Ironman   | d                | d                  | d             |
+| Ironman   | d                | b                  | d             |
+| Ironman   | a                | c                  | c             |
+| Ironman   | b                | b                  | a             |
+| Thor      | f                | f                  | a             |
+| Thor      | f                | d                  | c             |
+| Thor      | c                | b                  | b             |
+| Thor      | d                | c                  | d             |
+| Thor      | c                | d                  | f             |
+| X Man     | d                | c                  | d             |
+| X Man     | b                | c                  | c             |
+| X Man     | b                | c                  | c             |
+| X Man     | b                | b                  | d             |
+| X Man     | d                | f                  | b             |
++-----------+------------------+--------------------+---------------+
+25 rows in set (0.01 sec)
+
+
+
