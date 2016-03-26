@@ -1,0 +1,54 @@
+mysql> create database db1;
+mysql> use db1;
+mysql> create table service_station(id int,name varchar(20),addr varchar(50),contact bigint unique);
+Query OK, 0 rows affected (0.32 sec)
+
+mysql> alter table service_station add constraint pri_key primary key(id);
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> create table vehicles(id int,type varchar(20) check(type in('bus','bike','car')),brand varchar(40),color varchar(20),service_charge bigint);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> create table customers(id int primary key,name varchar(20),age int,emp_id int,foreign key(emp_id) references employees(id));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> create table invoices(id int,name_of_owner varchar(20),vehicle varchar(20),amount_total bigint,employee_assigned varchar(20));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table employees(id int primary key,name varchar(20),age int,contact bigint);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> alter table invoices add foreign key(employee_assigned) references employees(id);
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> drop table service_station;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> drop table vehicles;
+Query OK, 0 rows affected (0.36 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_db1 |
++---------------+
+| customers     |
+| employees     |
+| invoices      |
++---------------+
+3 rows in set (0.00 sec)
+
+
+mysql> drop database db1;
+Query OK, 3 rows affected (0.13 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.02 sec)
+
