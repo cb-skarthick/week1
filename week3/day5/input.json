@@ -1,0 +1,35 @@
+{"user":[
+
+{
+	"name":"dhinesh",
+	"address":"udumlai",
+	"worknumber":"342232",
+	"homenumber":3434322,
+	"mobilenumber":3454542
+},
+
+
+{
+	"name":"karthick",
+	"address":"coimbatore",
+	"worknumber":345433,
+	"homenumber":3456322,
+	"mobilenumber":3444542
+},
+
+{
+	"name":"sakthi",
+	"address":"coimbatore",
+	"worknumber":544442,
+	"homenumber":776570,
+	"mobilenumber":347733
+},
+
+{
+	"name":"ravi",
+	"address":"tiruppur",
+	"worknumber":989876,
+	"homenumber":8776788,
+	"mobilenumber":897887}
+]
+}
