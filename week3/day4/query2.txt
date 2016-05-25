@@ -1,0 +1,43 @@
+mysql> create  trigger  avg_calc
+    before insert on marks
+    for each row
+    begin 
+    set new.avg=(new.quarterly+new.half_yearly+new.annual)/3;
+    end
+    //
+Query OK, 0 rows affected (0.30 sec)
+
+
+mysql> INSERT INTO `marks`(student_id,subject_id,quarterly,half_yearly,annual,year,grade,updated_at,created_at) VALUES (100001,1,80,79,91,2008,4,now(),now());
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from marks where year=2008;
++------+------------+------------+-----------+-------------+--------+------+-------+---------------------+---------------------+---------+
+| id   | student_id | subject_id | quarterly | half_yearly | annual | year | grade | updated_at          | created_at          | avg     |
++------+------------+------------+-----------+-------------+--------+------+-------+---------------------+---------------------+---------+
+| 1130 |     100001 |          1 |        80 |          79 |     91 | 2008 |     4 | 2016-05-24 13:08:15 | 2016-05-24 13:08:15 | 83.3333 |
++------+------------+------------+-----------+-------------+--------+------+-------+---------------------+---------------------+---------+
+1 row in set (0.02 sec) 
+
+mysql> create  trigger  medal_received
+    ->     before insert on medals
+    ->     for each row
+    ->     begin 
+    ->    set  new.medal_received=new.medal_won;
+    ->     end
+    -> //
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> insert into medals(student_id,game_id,medal_won,year,grade,updated_at,created_at) values(100001,5,'silver',2008,4,now(),now());
+    -> //
+Query OK, 1 row affected (0.02 sec)
+
+
+mysql> select * from medals where year =2008//
++-----+------------+---------+-----------+------+-------+---------------------+---------------------+----------------+
+| id  | student_id | game_id | medal_won | year | grade | updated_at          | created_at          | medal_received |
++-----+------------+---------+-----------+------+-------+---------------------+---------------------+----------------+
+| 114 |     100001 |       5 | silver    | 2008 |     4 | 2016-05-24 13:39:07 | 2016-05-24 13:39:07 | silver         |
++-----+------------+---------+-----------+------+-------+---------------------+---------------------+----------------+
+1 row in set (0.00 sec)
+

@@ -1,0 +1,50 @@
+mysql> alter table students add updated_at datetime;
+Query OK, 0 rows affected (0.40 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table medals add updated_at datetime;
+Query OK, 0 rows affected (0.81 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table markss add updated_at datetime;
+ERROR 1146 (42S02): Table 'sample.markss' doesn't exist
+mysql> alter table marks add updated_at datetime;
+Query OK, 0 rows affected (0.35 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table students add created_at datetime;
+Query OK, 0 rows affected (0.30 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table marks add created_at datetime;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table medals add created_at datetime;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update marks set created_at = 0 where created_at is null;
+Query OK, 125 rows affected (0.09 sec)
+Rows matched: 125  Changed: 125  Warnings: 0
+
+mysql> update students set created_at = 0 where created_at is null;
+Query OK, 6 rows affected (0.00 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> update medals set created_at = 0 where created_at is null;
+Query OK, 13 rows affected (0.01 sec)
+Rows matched: 13  Changed: 13  Warnings: 0
+
+mysql> update medals set updated_at = 0 where updated_at is null;
+Query OK, 13 rows affected (0.00 sec)
+Rows matched: 13  Changed: 13  Warnings: 0
+
+mysql> update marks set updated_at = 0 where updated_at is null;
+Query OK, 125 rows affected (0.04 sec)
+Rows matched: 125  Changed: 125  Warnings: 0
+
+mysql> update students set updated_at = 0 where updated_at is null;
+Query OK, 6 rows affected (0.00 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
